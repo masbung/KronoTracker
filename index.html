@@ -1,12 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="noindex">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link rel="shortcut icon" type="image/png" href="Img/favicon.png" />
+
+    <link rel="stylesheet" href="Style/site.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <title>Krono Tracker</title>
 </head>
+
 <body>
-    <h1>Hello world</h1>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="">PomodoroTimer</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav"></ul>
+                <ul class="nav navbar-nav navbar-right" id="settingsNav">
+                    <li><a data-bind="click: showSettings"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        <div class="container" id="indexDiv">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-5">
+                    <h1 style="text-align:center" data-bind="text: timeDisplay"></h1>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px;">
+                <div class="col-md-12">
+                    <div class="col-md-4 col-md-offset-4">
+                        <button data-bind="click: startFocus, visible: showFocus()" class="btn btn-block btn-success">Focus</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button data-bind="click: continueFocus, visible: showContinue()" class="btn btn-block btn-success">Continue
+                            focus</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px;" data-bind="visible: !focusOn()">
+                <div class="col-md-4">
+                    <button data-bind="click: startPomodoro" id="pomodoroBtn" class="btn btn-block btn-default">Pomodoro</button>
+                </div>
+                <div class="col-md-4">
+                    <button data-bind="click: startShortBreak" id="shortBtn" class="btn btn-block btn-default">Short
+                        break</button>
+                </div>
+                <div class="col-md-4">
+                    <button data-bind="click: startLongBreak" id="longBtn" class="btn btn-block btn-default">Long break</button>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px;">
+                <div class="col-md-4">
+                    <button data-bind="click: resume, visible: showResume()" class="btn btn-block btn-default">Resume</button>
+                </div>
+                <div class="col-md-4">
+                    <button data-bind="click: pause, visible: showPause()" class="btn btn-block btn-primary">Pause</button>
+                </div>
+                <div class="col-md-4">
+                    <button data-bind="click: stop, visible: showStop()" class="btn btn-block btn-danger">Stop</button>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px;" data-bind="foreach: sequenceConfiguration, visible: showFocusBar()">
+                <div class="col-md-2">
+                    <!-- ko if: active -->
+                    <button class=" btn btn-block btn-success" data-bind="text: name, attr: {'id': 'sequence' + position}"></button>
+                    <!-- /ko -->
+                    <!-- ko ifnot: active -->
+                    <button class="btn btn-block btn-default" data-bind="text: name, attr: {'id': 'sequence' + position}"></button>
+                    <!-- /ko -->
+                </div>
+            </div>
+            <div class="row">
+                <h2>Today stats</h2>
+                <div class="col-md-10 col-md-offset-1">
+                    <div id="piechart"></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2019 - All rights reserved</p>
+        </footer>
+    </diV>
+
+    <!-- Begin Settings Modal -->
+    <div class="modal fade" id="modalSettings" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">                    
+                    <h4 class="modal-title">Settings</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>General settings</h4>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="displayName" class="control-label">Pomodoro minutes</label>
+                            <input class="form-control" type="number" data-bind="value: pomodoro" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="displayName" class="control-label">Short break minutes</label>
+                            <input class="form-control" type="number" data-bind="value: shortBreak" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="displayName" class="control-label">Long break minutes</label>
+                            <input class="form-control" type="number" data-bind="value: longBreak" />
+                        </div>
+                        <div class="col-md-12">
+                            <h4>Focus settings</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-bind="click: cancelSettings">Close</button>
+                    <button class="btn btn-primary" data-bind="click: saveSettings">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Settings Modal -->
 </body>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.2.js"></script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript" src="Script/index.js"></script>
+
+<script type="text/javascript" src="Script/settings.js"></script>
+
 </html>
