@@ -33,9 +33,8 @@ $(document).ready(function () {
         self.sequenceConfiguration.push({ position: 3, name: "Short break", active: false });
         self.sequenceConfiguration.push({ position: 4, name: "Pomodoro", active: false });
         self.sequenceConfiguration.push({ position: 5, name: "Short break", active: false });
-        self.sequenceConfiguration.push({ position: 6, name: "Pomodoro", active: false });
-        self.sequenceConfiguration.push({ position: 7, name: "Short break", active: false });
-        self.sequenceConfiguration.push({ position: 8, name: "Long break", active: false });
+        self.sequenceConfiguration.push({ position: 6, name: "Pomodoro", active: false });        
+        self.sequenceConfiguration.push({ position: 7, name: "Long break", active: false });
 
         self.currentSequence = ko.observable(0);
 

@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             self.shortBreak(self.oldShortBreak());
             self.longBreak(self.oldLongBreak());
         }
-
+        
         self.saveSettings = function () {            
             localStorage.setItem("pomodoroSetting", JSON.stringify({
                 minutes: self.pomodoro(),
@@ -74,13 +74,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
             localStorage.setItem("shrotBreakSetting", JSON.stringify({
                 minutes: self.shortBreak(),
                 seconds: 0,
-                timerType: "Pt"
+                timerType: "Sb"
             }));
 
             localStorage.setItem("longBreakSetting", JSON.stringify({
                 minutes: self.longBreak(),
                 seconds: 0,
-                timerType: "Pt"
+                timerType: "Lb"
             }));
 
             location.reload();
