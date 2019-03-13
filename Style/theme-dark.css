@@ -1,0 +1,28 @@
+body, html,.modal *,footer .body-content *, .btn{
+background-color: black !important
+}
+
+*{
+  color:white
+}
+.btn-default, modal *,.form-control {
+  color:white !important;
+}
+
+#_ABSTRACT_RENDERER_ID_0 rect{
+  fill:rgb(0, 0, 0);
+}
+#piechart * {
+  fill:rgb(24, 24, 24) !important;
+}
+#piechart text {
+  fill:rgb(255, 255, 255) !important;
+}
+#piechart * {
+  color: white
+}
+.nightMode{
+  border-style: solid !important;
+  border-color: white !important;
+  margin: auto auto
+}
