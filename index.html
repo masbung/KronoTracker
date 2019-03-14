@@ -10,6 +10,7 @@
     <link rel="shortcut icon" type="image/png" href="Img/favicon.png" />
 
     <link rel="stylesheet" href="Style/site.css">
+    <!-- <link rel="stylesheet" href="Style/theme-dark.css" /> -->
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
@@ -131,6 +132,7 @@
                         <div class="col-md-12">
                             <h4>Focus settings</h4>
                         </div>
+                        <button class="btn nightMode" >nightMode</button>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -157,5 +159,17 @@
 <script type="text/javascript" src="Script/index.js"></script>
 
 <script type="text/javascript" src="Script/settings.js"></script>
-
+<script>
+    function AddStyle(){
+        if($('head').find('link[href="Style/theme-dark.css"]').length <= 0){
+        $('head').append('<link rel="stylesheet" href="Style/theme-dark.css" type="text/css" />');
+        }
+        else{
+            $('head').find('link[href="Style/theme-dark.css"]').remove();
+        }
+    }
+    $('.nightMode').click(function(){
+        AddStyle();
+    });
+</script>
 </html>
