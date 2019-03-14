@@ -1,11 +1,11 @@
-document.addEventListener("DOMContentLoaded", function (event) {    
+document.addEventListener("DOMContentLoaded", function (event) {
 
     function SettingsViewModel() {
-        let self = this;        
+        let self = this;
 
         self.showSettings = function () {
             $('#modalSettings').modal({ backdrop: 'static', keyborad: false, show: true });
-        }        
+        }
     }
 
     var vm1 = new SettingsViewModel();
@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
         self.pomodoro = ko.observable();
         self.oldPomodoro = ko.observable();
+
+        self.darkModeOn = ko.observable(JSON.parse(localStorage.getItem("darkModeOn")));
+        self.oldDarkModeOn = ko.observable(self.darkModeOn());
 
         self.pomodoro.subscribe(function (newValue) {
             if (!newValue || newValue < 0) {
@@ -45,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         let pomodoroMinutes = JSON.parse(localStorage.getItem("pomodoroSetting"));
 
         self.pomodoro(pomodoroMinutes.minutes);
-        self.oldPomodoro(pomodoroMinutes.minutes);        
+        self.oldPomodoro(pomodoroMinutes.minutes);
 
         let shrotBreakMinutes = JSON.parse(localStorage.getItem("shrotBreakSetting"));
 
@@ -62,9 +65,17 @@ document.addEventListener("DOMContentLoaded", function (event) {
             self.pomodoro(self.oldPomodoro());
             self.shortBreak(self.oldShortBreak());
             self.longBreak(self.oldLongBreak());
+            self.darkModeOn(self.oldDarkModeOn());
+
+            if (self.darkModeOn()) {
+                $('head').append('<link rel="stylesheet" href="Style/theme-dark.css" type="text/css" />');                
+            }
+            else {
+                $('head').find('link[href="Style/theme-dark.css"]').remove();                
+            }
         }
-        
-        self.saveSettings = function () {            
+
+        self.saveSettings = function () {
             localStorage.setItem("pomodoroSetting", JSON.stringify({
                 minutes: self.pomodoro(),
                 seconds: 0,
@@ -83,7 +94,24 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 timerType: "Lb"
             }));
 
+            if(self.darkModeOn()){
+                localStorage.setItem("darkModeOn", true);
+            }else{
+                localStorage.setItem("darkModeOn", false);
+            }
+
             location.reload();
+        }
+
+        self.darkMode = function () {
+            if ($('head').find('link[href="Style/theme-dark.css"]').length <= 0) {
+                $('head').append('<link rel="stylesheet" href="Style/theme-dark.css" type="text/css" />');                
+            }
+            else {
+                $('head').find('link[href="Style/theme-dark.css"]').remove();                
+            }
+
+            return true;
         }
     }
 

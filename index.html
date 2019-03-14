@@ -129,10 +129,14 @@
                             <label for="displayName" class="control-label">Long break minutes</label>
                             <input class="form-control" type="number" data-bind="value: longBreak" />
                         </div>
-                        <div class="col-md-12">
+                        <!-- <div class="col-md-12">
                             <h4>Focus settings</h4>
-                        </div>
-                        <button class="btn nightMode" >nightMode</button>
+                        </div> -->
+                        <div class="col-md-12">
+                            <label class="control-label">Dark mode</label>
+                            <input type="checkbox" class="form-control" data-bind="click: darkMode, checked: darkModeOn">  
+                            <!-- <button class="btn nightMode" data-bind="click: darkMode">nightMode</button> -->
+                        </div>                        
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -159,17 +163,4 @@
 <script type="text/javascript" src="Script/index.js"></script>
 
 <script type="text/javascript" src="Script/settings.js"></script>
-<script>
-    function AddStyle(){
-        if($('head').find('link[href="Style/theme-dark.css"]').length <= 0){
-        $('head').append('<link rel="stylesheet" href="Style/theme-dark.css" type="text/css" />');
-        }
-        else{
-            $('head').find('link[href="Style/theme-dark.css"]').remove();
-        }
-    }
-    $('.nightMode').click(function(){
-        AddStyle();
-    });
-</script>
 </html>

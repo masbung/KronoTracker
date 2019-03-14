@@ -44,12 +44,15 @@ $(document).ready(function () {
 
         let configurationSet = localStorage.getItem("configurationSet");
 
+        let darkModeSet = JSON.parse(localStorage.getItem("darkModeOn"));
+
         configurationSet != null ? configurationSet = configurationSet === "true" : null;
 
         let today = new Date();
 
         if (configurationSet == null || !configurationSet) {
             localStorage.setItem("configurationSet", true);
+            localStorage.setItem("darkModeOn", false);
 
             localStorage.setItem("lastVisit", JSON.stringify({
                 date: today
@@ -82,6 +85,13 @@ $(document).ready(function () {
         // Beign total variables                
         var last = JSON.parse(localStorage.getItem("lastVisit"));
         last = new Date(last.date);
+
+        if (darkModeSet) {
+            $('head').append('<link rel="stylesheet" href="Style/theme-dark.css" type="text/css" />');            
+        }
+        else {
+            $('head').find('link[href="Style/theme-dark.css"]').remove();            
+        }
 
         if (today.getDate() > last.getDate()) {
             console.log("Reset stats!");
