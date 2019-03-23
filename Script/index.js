@@ -33,7 +33,7 @@ $(document).ready(function () {
         self.sequenceConfiguration.push({ position: 3, name: "Short break", active: false });
         self.sequenceConfiguration.push({ position: 4, name: "Pomodoro", active: false });
         self.sequenceConfiguration.push({ position: 5, name: "Short break", active: false });
-        self.sequenceConfiguration.push({ position: 6, name: "Pomodoro", active: false });        
+        self.sequenceConfiguration.push({ position: 6, name: "Pomodoro", active: false });
         self.sequenceConfiguration.push({ position: 7, name: "Long break", active: false });
 
         self.currentSequence = ko.observable(0);
@@ -53,6 +53,8 @@ $(document).ready(function () {
         if (configurationSet == null || !configurationSet) {
             localStorage.setItem("configurationSet", true);
             localStorage.setItem("darkModeOn", false);
+
+            localStorage.setItem("pomodoroActivies", null);
 
             localStorage.setItem("lastVisit", JSON.stringify({
                 date: today
@@ -87,14 +89,13 @@ $(document).ready(function () {
         last = new Date(last.date);
 
         if (darkModeSet) {
-            $('head').append('<link rel="stylesheet" href="Style/theme-dark.css" type="text/css" />');            
+            $('head').append('<link rel="stylesheet" href="Style/theme-dark.css" type="text/css" />');
         }
         else {
-            $('head').find('link[href="Style/theme-dark.css"]').remove();            
+            $('head').find('link[href="Style/theme-dark.css"]').remove();
         }
 
         if (today.getDate() > last.getDate()) {
-            console.log("Reset stats!");
             localStorage.setItem("lastVisit", JSON.stringify({
                 date: today
             }));
@@ -102,6 +103,7 @@ $(document).ready(function () {
             localStorage.setItem("totalPomodoro", 0);
             localStorage.setItem("totalShort", 0);
             localStorage.setItem("totalLong", 0);
+            localStorage.setItem("pomodoroActivies", null);
         }
 
         self.totalFocus = ko.observable(JSON.parse(localStorage.getItem("totalFocus")));
@@ -144,6 +146,7 @@ $(document).ready(function () {
                     switch (timerSetting.timerType) {
                         case "Pt":
                             self.notifyMe("Pomodoro end!");
+                            self.saveActivity();
                             clearInterval(timerInterval);
                             total = self.totalPomodoro();
                             total++;
@@ -205,6 +208,7 @@ $(document).ready(function () {
         };
 
         self.startFocus = function () {
+            self.activity(new self.pomodoroActivity());
             self.showFocusBar(true);
             self.showFocus(false);
             self.showPause(true);
@@ -226,6 +230,7 @@ $(document).ready(function () {
         self.displayTimer(pomodoroSetting);
 
         self.continueFocus = function () {
+            self.activity(new self.pomodoroActivity());
             self.showContinue(false);
             clearInterval(timerInterval);
             self.getCurrentTimer();
@@ -274,6 +279,7 @@ $(document).ready(function () {
         };
 
         self.startPomodoro = function () {
+            self.activity(new self.pomodoroActivity());
             let quickBtn = $('#pomodoroBtn');
             quickBtn.removeClass("btn-default");
             quickBtn.addClass("btn-success");
@@ -421,6 +427,49 @@ $(document).ready(function () {
             }
 
         }
+
+        // Begin Pomodoros Activities
+        self.pomodoroActivities = ko.observableArray([]);
+        self.activities = ko.observableArray([]);
+        self.activity = ko.observable();
+
+        self.pomodoroActivity = function () {
+            let self = this;
+            self.title = ko.observable();
+        }
+
+        self.pomodoroActivityVM = function (activity) {
+            let self = this;
+            self.title = ko.observable(activity.title);
+        }
+
+        self.activity(new self.pomodoroActivity());
+
+        self.loadActivities = function () {
+            let activitiesArray = JSON.parse(localStorage.getItem("pomodoroActivies"));
+            if (activitiesArray) {
+                activitiesArray.forEach(element => {
+                    let activityObj = {
+                        title: element.title
+                    }
+                    self.pomodoroActivities.push(new self.pomodoroActivityVM(activityObj));
+                });
+            }
+        }
+
+        self.loadActivities();
+
+        self.saveActivity = function () {
+            self.activities([]);
+            self.pomodoroActivities.push(self.activity());
+            self.pomodoroActivities().forEach(element => {
+                self.activities.push({
+                    "title": element.title()
+                })
+            });
+            localStorage.setItem("pomodoroActivies", JSON.stringify(self.activities()));
+        }
+        // End Pomodoros Activities
     }
     let indexModel = new IndexViewModel();
 
