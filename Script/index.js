@@ -432,42 +432,99 @@ $(document).ready(function () {
         self.pomodoroActivities = ko.observableArray([]);
         self.activities = ko.observableArray([]);
         self.activity = ko.observable();
+        self.editActivity = ko.observable();
+        self.enableEditActivity = ko.observable();
 
         self.pomodoroActivity = function () {
             let self = this;
+            self.index = null;
             self.title = ko.observable();
+            self.oldTitle = ko.observable();
+            self.completed = ko.observable(false);
+            self.oldCompleted = ko.observable(false);
+            self.edit = ko.observable(false);
         }
 
         self.pomodoroActivityVM = function (activity) {
             let self = this;
+            self.index = activity.index;
             self.title = ko.observable(activity.title);
+            self.oldTitle = ko.observable(activity.title);
+            self.completed = ko.observable(activity.completed);
+            self.oldCompleted = ko.observable(activity.completed);
+            self.edit = ko.observable(false);    
+        }
+
+        self.enableEdit = function(data){
+            self.enableEditActivity(true);
+            self.editActivity(data);
+            self.editActivity().edit(true);
+            // console.log(self.editActivity());
+        }
+
+        self.saveEdit = function(data){
+            self.editActivity(data);
+            self.editActivity().edit(false);            
+            self.enableEditActivity(false);
+
+            let index = 0;
+            self.activities([]);            
+            self.pomodoroActivities().forEach(element => {
+                self.activities.push({
+                    "title": element.title(),                    
+                    "completed": element.completed(),
+                    "edit": false,
+                    "index": index
+                });
+                index++;
+            });
+            localStorage.setItem("pomodoroActivies", JSON.stringify(self.activities()));
+            self.activity(new self.pomodoroActivity());
+        }
+
+        self.cancelEdit = function(data){
+            self.editActivity(data);
+            self.editActivity().edit(false);
+            self.editActivity().title(self.editActivity().oldTitle());
+            self.editActivity().completed(self.editActivity().oldCompleted());
+            self.enableEditActivity(false);
         }
 
         self.activity(new self.pomodoroActivity());
 
         self.loadActivities = function () {
             let activitiesArray = JSON.parse(localStorage.getItem("pomodoroActivies"));
+            let index = 0;
             if (activitiesArray) {
                 activitiesArray.forEach(element => {
                     let activityObj = {
-                        title: element.title
+                        title: element.title,
+                        completed: element.completed,
+                        index: index,
                     }
                     self.pomodoroActivities.push(new self.pomodoroActivityVM(activityObj));
+                    index++;
                 });
-            }
+            }            
         }
 
-        self.loadActivities();
+        self.loadActivities();        
 
         self.saveActivity = function () {
+            let index = 0;
             self.activities([]);
             self.pomodoroActivities.push(self.activity());
             self.pomodoroActivities().forEach(element => {
                 self.activities.push({
-                    "title": element.title()
-                })
+                    "title": element.title(),
+                    "edit": false,
+                    "completed": false,
+                    "index": index
+                });
+                index++;
             });
             localStorage.setItem("pomodoroActivies", JSON.stringify(self.activities()));
+            self.activity(new self.pomodoroActivity());
         }
         // End Pomodoros Activities
     }
