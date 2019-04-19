@@ -21,6 +21,7 @@ $(document).ready(function () {
         self.showResume = ko.observable(false);
         self.showStop = ko.observable(false);
         self.showFocusBar = ko.observable(false);
+        self.showTextBox = ko.observable(false);
         // End show variables
 
         self.timeDisplay = ko.observable();
@@ -213,7 +214,8 @@ $(document).ready(function () {
             self.showFocus(false);
             self.showPause(true);
             self.showStop(true);
-            self.focusOn(true);
+            self.focusOn(true);            
+            self.showTextBox(true);
             clearInterval(timerInterval);
             currentSetting = pomodoroSetting;
             self.displayTimer(pomodoroSetting);
@@ -231,11 +233,17 @@ $(document).ready(function () {
 
         self.continueFocus = function () {
             self.activity(new self.pomodoroActivity());
-            self.showContinue(false);
+            self.showContinue(false);            
             clearInterval(timerInterval);
             self.getCurrentTimer();
             self.displayTimer(currentSetting);
             startTime(currentSetting, true);
+
+            if(currentSetting.timerType === "Sb" || currentSetting.timerType === "Lb"){
+                self.showTextBox(false);
+            }else{
+                self.showTextBox(true);
+            }            
         }
 
         self.getCurrentTimer = function () {
@@ -275,17 +283,36 @@ $(document).ready(function () {
                 currentSequence = $('#sequence' + self.currentSequence());
                 currentSequence.removeClass("btn-default");
                 currentSequence.addClass("btn-success");
-            }
+            }                        
         };
 
+        self.cleanQuickButtons = function(){
+            let quickBtn = $('#pomodoroBtn');
+            quickBtn.removeClass("btn-success");
+            quickBtn.removeClass("btn-default");
+            quickBtn.addClass("btn-default");
+
+            quickBtn = $('#shortBtn');
+            quickBtn.removeClass("btn-success");
+            quickBtn.removeClass("btn-default");
+            quickBtn.addClass("btn-default");
+
+            quickBtn = $('#longBtn');
+            quickBtn.removeClass("btn-success");
+            quickBtn.removeClass("btn-default");
+            quickBtn.addClass("btn-default");
+        }
+
         self.startPomodoro = function () {
-            self.activity(new self.pomodoroActivity());
+            self.activity(new self.pomodoroActivity());            
+            self.cleanQuickButtons();
             let quickBtn = $('#pomodoroBtn');
             quickBtn.removeClass("btn-default");
             quickBtn.addClass("btn-success");
             self.showFocus(false);
             self.showStop(true);
             self.showPause(true);
+            self.showTextBox(true);
             if (self.focusOn())
                 self.cancelFocus();
             clearInterval(timerInterval);
@@ -295,12 +322,14 @@ $(document).ready(function () {
         }
 
         self.startShortBreak = function () {
+            self.cleanQuickButtons();
             let quickBtn = $('#shortBtn');
             quickBtn.removeClass("btn-default");
             quickBtn.addClass("btn-success");
             self.showFocus(false);
             self.showStop(true);
             self.showPause(true);
+            self.showTextBox(false);
             if (self.focusOn())
                 self.cancelFocus();
             clearInterval(timerInterval);
@@ -310,12 +339,14 @@ $(document).ready(function () {
         }
 
         self.startLongBreak = function () {
+            self.cleanQuickButtons();
             let quickBtn = $('#longBtn');
             quickBtn.removeClass("btn-default");
             quickBtn.addClass("btn-success");
             self.showFocus(false);
             self.showStop(true);
-            self.showPause(true);
+            self.showPause(true);            
+            self.showTextBox(false);
             if (self.focusOn())
                 self.cancelFocus();
             clearInterval(timerInterval);
@@ -414,7 +445,7 @@ $(document).ready(function () {
             if (Notification.permission !== "granted")
                 Notification.requestPermission();
             else {
-                var notification = new Notification('Pomodoro timer', {
+                var notification = new Notification('Krono Tracker', {
                     icon: 'https://banner2.kisspng.com/20180529/lcw/kisspng-alarm-clocks-stopwatch-timer-clock-vector-5b0d73ecde80d0.0695532415276083009114.jpg',
                     body: message,
                     requireInteraction: true
