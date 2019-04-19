@@ -24,6 +24,8 @@ $(document).ready(function () {
         self.showTextBox = ko.observable(false);
         // End show variables
 
+
+        // Begin Configurations
         self.timeDisplay = ko.observable();
 
         self.sequenceConfiguration = ko.observableArray([]);
@@ -85,6 +87,8 @@ $(document).ready(function () {
             }));
         }
 
+        // End configurations
+
         // Beign total variables                
         var last = JSON.parse(localStorage.getItem("lastVisit"));
         last = new Date(last.date);
@@ -112,6 +116,8 @@ $(document).ready(function () {
         self.totalShort = ko.observable(JSON.parse(localStorage.getItem("totalShort")));
         self.totalLong = ko.observable(JSON.parse(localStorage.getItem("totalLong")));
         // End total variables
+
+        //Begin main logic
 
         let pomodoroSetting = JSON.parse(localStorage.getItem("pomodoroSetting"));
 
@@ -356,9 +362,10 @@ $(document).ready(function () {
         }
 
         self.pause = function () {
-            self.showPause(false);
+            self.showPause(false);            
             clearInterval(timerInterval);
             self.showResume(true);
+            self.showbNotMeasuredModal();
         }
 
         self.resume = function () {
@@ -459,6 +466,8 @@ $(document).ready(function () {
 
         }
 
+        // End main logic
+
         // Begin Pomodoros Activities
         self.pomodoroActivities = ko.observableArray([]);
         self.activities = ko.observableArray([]);
@@ -558,6 +567,57 @@ $(document).ready(function () {
             self.activity(new self.pomodoroActivity());
         }
         // End Pomodoros Activities
+
+        // Begin not measured time        
+
+        self.notMeasuredTimeDisplay = ko.observable();
+
+        self.totalNotMeasuredMinutes = ko.observable();
+        self.totalNotMeasuredSeconds = ko.observable();
+
+        self.totalMinutes = ko.observable();
+        self.totalSeconds = ko.observable();        
+
+        let notMeasuredTime = function () {          
+            self.totalMinutes(0);
+            self.totalSeconds(0);
+            let minutes = 0;
+            let seconds = 0;            
+            measureInterval = setInterval(function () {                
+
+                let secondsAdd = self.totalSeconds();
+                secondsAdd++;
+                self.totalSeconds(secondsAdd);
+
+                minutes = self.totalMinutes() < 10 ? "0" + self.totalMinutes() : self.totalMinutes();
+                seconds = self.totalSeconds() < 10 ? "0" + self.totalSeconds() : self.totalSeconds();
+
+                self.notMeasuredTimeDisplay(minutes + ":" + seconds);                
+
+                if (self.totalSeconds() == 10) {
+                    self.totalSeconds(0);
+                    let minutesAdd = self.totalMinutes();
+                    minutesAdd++;
+                    self.totalMinutes(minutesAdd);
+                }else{
+
+                }
+
+            }, 1000);
+        };
+
+        self.showbNotMeasuredModal = function () {
+            $('#modalNotMeasure').modal({ backdrop: 'static', keyborad: false, show: true });
+            notMeasuredTime();
+        };
+
+        self.stopNotMeasuredTime = function(){            
+            clearInterval(measureInterval);
+            $('#modalNotMeasure').modal('hide');
+            console.log(self.totalNotMeasuredMinutes() + ":" + self.totalNotMeasuredSeconds());
+        };
+
+        // End not measured time
     }
     let indexModel = new IndexViewModel();
 

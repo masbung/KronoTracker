@@ -43,16 +43,55 @@
 
     <div class="container body-content">
         <div class="container" id="indexDiv">
+            <!-- Begin not measure Modal -->
+            <div class="modal fade" id="modalNotMeasure" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Not measured time</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <!-- <div class="col-md-12">
+                                <h4>General settings</h4>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="displayName" class="control-label">Pomodoro minutes</label>
+                                <input class="form-control" type="number" data-bind="value: pomodoro" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="displayName" class="control-label">Short break minutes</label>
+                                <input class="form-control" type="number" data-bind="value: shortBreak" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="displayName" class="control-label">Long break minutes</label>
+                                <input class="form-control" type="number" data-bind="value: longBreak" />
+                            </div>                        
+                            <div class="col-md-12">
+                                <label class="control-label">Dark mode</label>
+                                <input type="checkbox" class="form-control" data-bind="click: darkMode, checked: darkModeOn">                            
+                            </div> -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-bind="click: stopNotMeasuredTime">Close</button>
+                            <!-- <button class="btn btn-primary" data-bind="click: saveSettings">Save changes</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End not measure Modal -->
+
             <div class="row">
                 <div class="col-md-2 col-md-offset-5">
                     <h1 style="text-align:center" data-bind="text: timeDisplay"></h1>
                 </div>
             </div>
             <div class="row">
-                    <div class="col-md-4 col-md-offset-4" data-bind="visible: !showFocus()">
-                        <input class="form-control" type="text" data-bind="visible: showTextBox(), value: activity().title"/>
-                    </div>
+                <div class="col-md-4 col-md-offset-4" data-bind="visible: !showFocus()">
+                    <input class="form-control" type="text" data-bind="visible: showTextBox(), value: activity().title" />
                 </div>
+            </div>
             <div class="row" style="padding-top: 20px;">
                 <div class="col-md-12">
                     <div class="col-md-4 col-md-offset-4">
@@ -100,7 +139,7 @@
             <div class="row">
                 <h2>Today stats</h2>
                 <div class="col-md-4">
-                    <h4>Pomodoros</h4>                    
+                    <h4>Pomodoros</h4>
                     <diV class="col-md-12">
                         <div class="table-responsive">
                             <table class="table table-condensed table-striped table-hover">
@@ -116,24 +155,28 @@
                                         <td data-bind="text: $index() + 1"></td>
                                         <td data-bind="visible: !edit(), text: title"></td>
                                         <td data-bind="visible: edit()">
-                                                <input class="form-control" type="text" data-bind="value: title"/>
+                                            <input class="form-control" type="text" data-bind="value: title" />
                                         </td>
                                         <td data-bind="visible: !edit()">
-                                            <input data-bind="checked: completed" class="form-control" type="checkbox" disabled/>
+                                            <input data-bind="checked: completed" class="form-control" type="checkbox"
+                                                disabled />
                                         </td>
                                         <td data-bind="visible: edit()">
-                                            <input data-bind="checked: completed" class="form-control" type="checkbox"/>
+                                            <input data-bind="checked: completed" class="form-control" type="checkbox" />
                                         </td>
                                         <td>
-                                            <a data-bind="visible: !$root.enableEditActivity(), click: $root.enableEdit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-edit"></i></a>
-                                            <a data-bind="visible: edit(), click: $root.saveEdit" class="btn btn-success btn-xs"><i class="glyphicon glyphicon-floppy-save"></i></a>
-                                            <a data-bind="visible: edit(), click: $root.cancelEdit" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i></a>
+                                            <a data-bind="visible: !$root.enableEditActivity(), click: $root.enableEdit"
+                                                class="btn btn-default btn-sm"><i class="glyphicon glyphicon-edit"></i></a>
+                                            <a data-bind="visible: edit(), click: $root.saveEdit" class="btn btn-success btn-xs"><i
+                                                    class="glyphicon glyphicon-floppy-save"></i></a>
+                                            <a data-bind="visible: edit(), click: $root.cancelEdit" class="btn btn-danger btn-xs"><i
+                                                    class="glyphicon glyphicon-remove"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                    </diV>                    
+                    </diV>
                 </div>
                 <div class="col-md-8">
                     <div id="piechart"></div>
